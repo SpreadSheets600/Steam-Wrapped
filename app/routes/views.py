@@ -20,6 +20,13 @@ def index():
     return render_template("index.html")
 
 
+@views_bp.route("/generating")
+def generating():
+    if "steam_id" not in session:
+        return redirect(url_for("views.index"))
+    return render_template("generating.html")
+
+
 @views_bp.route("/dashboard")
 def dashboard():
     if "steam_id" not in session:
