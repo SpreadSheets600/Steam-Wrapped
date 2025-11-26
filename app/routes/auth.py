@@ -63,7 +63,7 @@ def authorize():
         except Exception as e:
             print(f"Error saving user: {e}")
 
-        return redirect(url_for("views.wrapped"))
+        return redirect(url_for("views.generating"))
 
     return "Login Failed", 401
 
