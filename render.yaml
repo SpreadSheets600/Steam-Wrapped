@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: steam-wrapped
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:application
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: STEAM_API_KEY
+        sync: false  # You'll set this manually
+      - key: GOOGLE_API_KEY
+        sync: false  # You'll set this manually
+      - key: DATABASE_URL
+        fromDatabase:
+          type: postgresql
+          name: steam-wrapped-db
+          property: connectionString
+
+databases:
+  - name: steam-wrapped-db
+    databaseName: steam_wrapped
+    user: steam_wrapped_user
