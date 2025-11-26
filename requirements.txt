@@ -1,0 +1,10 @@
+flask
+requests
+python-dotenv
+flask-caching
+beautifulsoup4
+python-steam-api
+flask-sqlalchemy
+google-generativeai
+gunicorn
+psycopg2-binary
