@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-void text-white p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- Header with Profile Link -->
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <img src="{{ user.avatarfull }}"
+            class="w-20 h-20 rounded-full border-4 border-neon-blue shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+          <div class="absolute -bottom-1 -right-1 bg-neon-green text-black font-bold px-2 py-0.5 rounded-full text-xs">
+            Lvl {{ stats.level }}
+          </div>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold font-display">{{ user.personaname }}</h1>
+          <div class="flex gap-3 text-sm text-gray-400 font-mono mt-1">
+            <span>{{ stats.game_count }} Games</span>
+            <span class="text-gray-600">•</span>
+            <span>{{ stats.total_playtime_hours }}h Total</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <a href="{{ url_for('views.wrapped') }}"
+          class="px-6 py-2 bg-gradient-to-r from-neon-purple to-neon-blue rounded-full font-bold hover:scale-105 transition-transform text-sm">
+          View Wrapped ✨
+        </a>
+        <a href="{{ user.profileurl }}" target="_blank"
+          class="px-6 py-2 glass rounded-full font-mono text-sm hover:bg-white/10 transition-colors">
+          Steam Profile ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(180px,auto)]">
+
+      <!-- 1. AI Personality Analysis (Large) -->
+      <div
+        class="md:col-span-2 md:row-span-2 bg-gradient-to-br from-purple-900/50 to-void border border-white/10 rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-neon-purple/20 blur-[100px] rounded-full"></div>
+        <div class="absolute top-4 right-4 opacity-30 group-hover:opacity-50 transition-opacity">
+          <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-2 h-2 bg-neon-purple rounded-full animate-pulse"></div>
+            <h3 class="text-neon-purple font-mono text-sm">POWERED BY GEMINI AI</h3>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">{{ personality.title }}</h2>
+          <p class="text-xl text-gray-300 leading-relaxed mb-6">{{ personality.desc }}</p>
+          {% if personality.traits %}
+          <div class="flex flex-wrap gap-2">
+            {% for trait in personality.traits %}
+            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">{{ trait }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- 2. Gaming Energy Score™ -->
+      <div
+        class="bg-gradient-to-br from-green-900/30 to-void border border-neon-green/30 rounded-3xl p-6 flex flex-col justify-between hover:border-neon-green/50 transition-colors relative overflow-hidden">
+        <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-neon-green/20 blur-[60px] rounded-full"></div>
+        <h3 class="text-neon-green font-mono text-sm">GAMING ENERGY SCORE</h3>
+        <div class="relative z-10">
+          <div class="text-6xl font-bold font-display text-white mb-2">{{ energy_score }}</div>
+          <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-neon-green to-green-400" style="width: {{ energy_score }}%"></div>
+          </div>
+        </div>
+        <div class="text-sm text-gray-400">Top <span class="text-neon-green font-bold">{{ energy_percentile }}%</span>
+          of players</div>
+      </div>
+
+      <!-- 3. Rarest Achievement -->
+      <div
+        class="bg-gradient-to-br from-yellow-900/20 to-void border border-yellow-500/30 rounded-3xl p-6 relative overflow-hidden">
+        {% if achievement_stats and achievement_stats.rarest %}
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 opacity-30">
+          <img src="{{ achievement_stats.rarest.icon }}" class="w-full h-full grayscale">
+        </div>
+        <h3 class="text-yellow-500 font-mono text-sm mb-3">🏆 RAREST ACHIEVEMENT</h3>
+        <div class="font-bold text-lg leading-tight mb-1">{{ achievement_stats.rarest.display_name }}</div>
+        <div class="text-gray-400 text-sm mb-4">{{ achievement_stats.top_game_name }}</div>
+        <div class="inline-block bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold">
+          Only {{ (achievement_stats.rarest.rarity | float) | round(1) }}% unlocked
+        </div>
+        {% else %}
+        <h3 class="text-yellow-500 font-mono text-sm mb-3">🏆 RAREST ACHIEVEMENT</h3>
+        <div class="flex items-center justify-center h-24 text-gray-500">No achievements found</div>
+        {% endif %}
+      </div>
+
+      <!-- 4. Playtime Timeline Graph (Wide) -->
+      <div class="md:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-gray-400 font-mono text-sm">PLAYTIME TIMELINE</h3>
+          {% if timeline_stats %}
+          <div class="flex gap-4 text-xs">
+            <span class="text-neon-green">Peak: {{ timeline_stats.most_active_month }}</span>
+            <span class="text-gray-600">Low: {{ timeline_stats.least_active_month }}</span>
+          </div>
+          {% endif %}
+        </div>
+        <div class="h-40">
+          <canvas id="timelineChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 5. Genre Mix / Breakdown -->
+      <div class="md:col-span-1 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">GENRE BREAKDOWN</h3>
+        <div class="space-y-3">
+          {% for genre, data in genre_breakdown.items() %}
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="truncate">{{ genre }}</span>
+              <span class="text-gray-500 ml-2">{{ data.hours }}h</span>
+            </div>
+            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-neon-purple to-neon-blue transition-all"
+                style="width: {{ data.percent }}%"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 6. Global Comparison Table -->
+      <div class="md:col-span-1 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">VS GLOBAL AVERAGE</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center border-b border-white/10 pb-3">
+            <span class="text-gray-500 text-sm">Hours</span>
+            <div class="text-right">
+              <span class="text-white font-bold">{{ global_comparison.hours.you }}h</span>
+              <span class="text-gray-600 text-sm ml-2">/ {{ global_comparison.hours.avg }}h avg</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center border-b border-white/10 pb-3">
+            <span class="text-gray-500 text-sm">Games</span>
+            <div class="text-right">
+              <span class="text-white font-bold">{{ global_comparison.games.you }}</span>
+              <span class="text-gray-600 text-sm ml-2">/ {{ global_comparison.games.avg }} avg</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500 text-sm">Rare %</span>
+            <div class="text-right">
+              <span class="text-white font-bold">{{ global_comparison.rare_achievements.you }}</span>
+              <span class="text-gray-600 text-sm ml-2">/ {{ global_comparison.rare_achievements.avg }} avg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Games Categorized -->
+      <div class="md:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">LIBRARY STATUS</h3>
+        <div class="grid grid-cols-4 gap-4 text-center">
+          <div class="bg-black/30 rounded-xl p-4">
+            <div class="text-3xl font-bold text-white">{{ games_categorized.played }}</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Played</div>
+          </div>
+          <div class="bg-black/30 rounded-xl p-4">
+            <div class="text-3xl font-bold text-neon-green">{{ games_categorized.completed }}</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Completed</div>
+          </div>
+          <div class="bg-black/30 rounded-xl p-4">
+            <div class="text-3xl font-bold text-neon-blue">{{ games_categorized.abandoned }}</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Abandoned</div>
+          </div>
+          <div class="bg-black/30 rounded-xl p-4">
+            <div class="text-3xl font-bold text-gray-500">{{ games_categorized.never_touched }}</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Untouched</div>
+          </div>
+        </div>
+        <div class="mt-4 h-3 bg-black/30 rounded-full overflow-hidden flex">
+          <div class="bg-white h-full" style="width: {{ (games_categorized.played / stats.game_count * 100)|round }}%">
+          </div>
+          <div class="bg-neon-green h-full"
+            style="width: {{ (games_categorized.completed / stats.game_count * 100)|round }}%"></div>
+          <div class="bg-neon-blue h-full"
+            style="width: {{ (games_categorized.abandoned / stats.game_count * 100)|round }}%"></div>
+          <div class="bg-gray-700 h-full flex-1"></div>
+        </div>
+      </div>
+
+      <!-- 8. Top Developers -->
+      <div class="md:col-span-1 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">TRUSTED DEVELOPERS</h3>
+        <ul class="space-y-3">
+          {% for dev in top_developers[:5] %}
+          <li class="flex items-center gap-3 group">
+            <span
+              class="w-6 h-6 flex items-center justify-center rounded-full bg-white/10 text-xs font-bold group-hover:bg-neon-green group-hover:text-black transition-colors">
+              {{ loop.index }}
+            </span>
+            <div class="flex-1 min-w-0">
+              <span class="font-medium truncate block">{{ dev.name }}</span>
+              <span class="text-xs text-gray-500">{{ dev.hours }}h played</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- 9. Badges Collection -->
+      <div class="md:col-span-1 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">BADGE COLLECTION</h3>
+        {% if badges %}
+        <div class="grid grid-cols-4 gap-3">
+          {% for badge in badges[:8] %}
+          <div class="relative group cursor-pointer">
+            <img src="{{ badge.image }}" class="w-full rounded-lg hover:scale-110 transition-transform"
+              title="{{ badge.name }}">
+            <div
+              class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none z-10">
+              {{ badge.name }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="flex items-center justify-center h-24 text-gray-500">No badges yet</div>
+        {% endif %}
+      </div>
+
+      <!-- 10. Recently Played -->
+      <div class="md:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">RECENTLY PLAYED</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {% for game in recent[:8] %}
+          <div class="flex items-center gap-3 bg-black/30 p-3 rounded-xl hover:bg-black/50 transition-colors group">
+            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ game.appid }}/capsule_184x69.jpg"
+              class="w-20 rounded-lg group-hover:scale-105 transition-transform" alt="">
+            <div class="overflow-hidden flex-1">
+              <div class="font-bold text-sm truncate">{{ game.name }}</div>
+              <div class="text-xs text-gray-500">{{ (game.playtime_2weeks / 60)|int }}h past 2 weeks</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 11. Achievement Score -->
+      <div class="md:col-span-1 bg-gradient-to-br from-blue-900/30 to-void border border-neon-blue/30 rounded-3xl p-6">
+        <h3 class="text-neon-blue font-mono text-sm mb-4">ACHIEVEMENT SCORE</h3>
+        {% if achievement_stats %}
+        <div class="text-center">
+          <div class="text-5xl font-bold font-display text-white mb-2">{{ achievement_stats.total_unlocked }}</div>
+          <div class="text-sm text-gray-400 mb-4">achievements unlocked</div>
+          <div class="flex justify-center gap-6 text-center">
+            <div>
+              <div class="text-lg font-bold text-neon-purple">{{ achievement_stats.rare_count }}</div>
+              <div class="text-xs text-gray-500">Rare</div>
+            </div>
+            <div>
+              <div class="text-lg font-bold text-yellow-500">{{ achievement_stats.ultra_rare_count }}</div>
+              <div class="text-xs text-gray-500">Ultra Rare</div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="flex items-center justify-center h-full text-gray-500">No data</div>
+        {% endif %}
+      </div>
+
+      <!-- 12. Playtime Stats -->
+      <div class="md:col-span-1 bg-white/5 border border-white/10 rounded-3xl p-6">
+        <h3 class="text-gray-400 font-mono text-sm mb-4">PLAYTIME BREAKDOWN</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500 text-sm">Total Hours</span>
+            <span class="text-2xl font-bold">{{ stats.total_playtime_hours }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500 text-sm">Days Lost (Sleep)</span>
+            <span class="text-xl font-bold text-neon-purple">{{ sleep_destroyer.days_lost }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500 text-sm">Movies Worth</span>
+            <span class="text-xl font-bold text-neon-blue">{{ sleep_destroyer.movies_watched }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500 text-sm">Anime Eps</span>
+            <span class="text-xl font-bold text-neon-green">{{ sleep_destroyer.anime_episodes }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. Top Game Showcase -->
+      {% if top_game %}
+      <div class="md:col-span-2 bg-black border border-white/10 rounded-3xl overflow-hidden relative group">
+        <div class="absolute inset-0">
+          <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ top_game.appid }}/library_hero.jpg" alt=""
+            class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity">
+          <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+        </div>
+        <div class="relative z-10 p-6 flex items-center gap-6">
+          <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ top_game.appid }}/header.jpg" alt=""
+            class="w-48 rounded-xl shadow-2xl group-hover:scale-105 transition-transform">
+          <div class="flex-1">
+            <div class="text-neon-green font-mono text-sm mb-2">#1 MOST PLAYED</div>
+            <h3 class="text-3xl font-display font-bold mb-2">{{ top_game.name }}</h3>
+            <div class="flex gap-6 text-gray-400">
+              <div>
+                <span class="text-2xl font-bold text-white">{{ (top_game.playtime_forever / 60)|int }}</span>
+                <span class="text-sm ml-1">hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 border-t border-white/10 mt-8">
+      <p class="text-gray-500 font-mono text-sm">STEAM WRAPPED 2025 • Data powered by Steam API</p>
+    </footer>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Timeline Chart
+  const ctx = document.getElementById('timelineChart');
+  if (ctx) {
+    const timelineData = {{ timeline | tojson
+  }};
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: timelineData.map(d => d.month),
+      datasets: [{
+        data: timelineData.map(d => d.hours),
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#3B82F6',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#000',
+          titleColor: '#fff',
+          bodyColor: '#9CA3AF',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: {
+            label: (ctx) => ctx.raw + ' hours'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#6B7280', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#6B7280', font: { size: 10 } }
+        }
+      }
+    }
+  });
+  }
+</script>
+{% endblock %}
