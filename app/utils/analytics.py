@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 from flask import current_app
 import google.generativeai as genai
 from collections import Counter, defaultdict
@@ -60,12 +61,17 @@ class Analytics:
         Provide a short, punchy description (max 15 words) explaining why.
         Also suggest an emoji that fits.
         Format: Title|Description|Emoji
+        STRICTLY follow the format. Do NOT include any introductory text like "Here is an analysis".
         """
 
         try:
             response = model.generate_content(prompt)
             text = response.text.strip()
-
+            
+            # Clean up potential introductory text
+            # Remove "Here is an analysis:" or similar prefixes
+            text = re.sub(r"^.*?(Here's|Here is) an analysis:?\s*", "", text, flags=re.IGNORECASE | re.DOTALL)
+            
             parts = text.split("|")
             if len(parts) >= 3:
                 return {
