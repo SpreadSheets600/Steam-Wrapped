@@ -1,0 +1,15 @@
+[project]
+name = "steam-wrapped"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.14.2",
+    "dotenv>=0.9.9",
+    "flask>=3.1.2",
+    "flask-caching>=2.3.1",
+    "flask-sqlalchemy>=3.1.1",
+    "google-generativeai>=0.8.5",
+    "python-dotenv>=1.2.1",
+    "python-steam-api>=2.2.1",
+    "requests>=2.32.5",
+]
