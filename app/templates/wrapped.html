@@ -1,5 +1,7 @@
-{% extends "base.html" %} {% block content %}
-<div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+{% extends "base.html" %}
+{% block main_padding %}pt-0{% endblock %}
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-void">
   <!-- Progress Bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-white/10 z-50">
     <div id="progress-bar"
@@ -7,17 +9,9 @@
   </div>
 
   <!-- Scrollable Sections -->
-  <div class="snap-y snap-mandatory h-screen overflow-y-auto scroll-smooth" id="wrapped-scroll">
+  <div class="snap-y snap-mandatory h-screen w-full overflow-y-auto scroll-smooth" id="wrapped-scroll">
     <!-- Section 1: Intro -->
-    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div class="absolute inset-0 z-0">
-        <div
-          class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-neon-purple/30 blur-[150px] rounded-full animate-pulse-slow">
-        </div>
-        <div
-          class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-neon-blue/30 blur-[150px] rounded-full animate-pulse-slow">
-        </div>
-      </div>
+    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden bg-void">
 
       <div class="relative z-10 text-center space-y-8 px-4">
         <div class="relative inline-block animate-float">
@@ -47,7 +41,7 @@
     </section>
 
     <!-- Section 2: Total Time Stats -->
-    <section class="snap-start min-h-screen flex items-center justify-center relative px-4 py-20">
+    <section class="snap-start min-h-screen flex items-center justify-center relative px-4 py-20 bg-void">
       <div class="max-w-5xl w-full">
         <div class="text-center mb-16">
           <h3 class="font-mono text-gray-500 mb-4">THIS YEAR YOU SPENT</h3>
@@ -90,20 +84,16 @@
             <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">SKILL LEVELS GAINED</div>
           </div>
         </div>
-
-        <div class="mt-12 text-center">
-          <p class="text-lg text-gray-500 italic">{% for analogy in analogies[:1] %} "{{ analogy }}" {% endfor %}</p>
-        </div>
       </div>
     </section>
 
     <!-- Section 3: Top Game Reveal -->
     {% if top_game %}
-    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden bg-void">
       <!-- Background Image -->
-      <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ top_game.appid }}/library_hero.jpg" alt=""
-          class="w-full h-full object-cover opacity-20 blur-sm" />
+          class="absolute inset-0 w-full h-full object-cover object-center opacity-20 blur-sm" />
         <div class="absolute inset-0 bg-gradient-to-t from-void via-void/80 to-transparent"></div>
       </div>
 
@@ -137,7 +127,7 @@
     {% endif %}
 
     <!-- Section 4: Top 5 Games -->
-    <section class="snap-start min-h-screen flex items-center justify-center px-4 py-20">
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 py-20 bg-void">
       <div class="max-w-4xl w-full">
         <h3 class="font-mono text-center text-gray-500 mb-4">YOUR TOP 5</h3>
         <h2 class="text-3xl md:text-5xl font-display font-bold text-center mb-12">The Rotation</h2>
@@ -162,7 +152,7 @@
     </section>
 
     <!-- Section 5: Top Developer -->
-    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative">
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative bg-void">
       <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/10 to-transparent"></div>
 
       <div class="relative z-10 text-center max-w-3xl">
@@ -185,7 +175,7 @@
     </section>
 
     <!-- Section 6: Top Genre -->
-    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative">
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative bg-void">
       <div class="absolute inset-0 bg-gradient-to-bl from-neon-blue/10 to-transparent"></div>
 
       <div class="relative z-10 text-center max-w-3xl">
@@ -213,7 +203,7 @@
     </section>
 
     <!-- Section 7: Call to Action -->
-    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-void">
       <div class="absolute inset-0 z-0">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-r from-neon-purple/20 to-neon-blue/20 blur-[100px] rounded-full">
@@ -233,7 +223,36 @@
           <a href="{{ url_for('views.dashboard') }}"
             class="px-10 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform text-lg">
             View Full Dashboard </a>
+          {% if can_share and not share_url %}
+          <form method="post" action="{{ url_for('views.create_wrapped_share') }}">
+            <button type="submit"
+              class="px-10 py-4 bg-neon-purple text-white font-bold rounded-full hover:scale-105 transition-transform text-lg">
+              Generate Share Link
+            </button>
+          </form>
+          {% elif can_share and share_url %}
+          <form method="post" action="{{ url_for('views.create_wrapped_share') }}">
+            <button type="submit"
+              class="px-10 py-4 border border-white/20 text-white font-bold rounded-full hover:scale-105 transition-transform text-lg">
+              Refresh Share Data
+            </button>
+          </form>
+          {% endif %}
         </div>
+
+        {% if share_url %}
+        <div class="pt-8 max-w-2xl mx-auto w-full">
+          <p class="text-gray-400 mb-2 font-mono text-sm">Share this link with your friends</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input id="share-link-input" type="text" readonly value="{{ share_url }}"
+              class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-200" />
+            <button id="copy-share-link" data-copy-target="share-link-input" data-copy-feedback="share-copy-feedback"
+              class="px-6 py-3 bg-neon-blue text-black font-bold rounded-xl hover:opacity-90 transition-opacity">
+              Copy Link
+            </button>
+          </div>
+        </div>
+        {% endif %}
 
         <div class="pt-12">
           <p class="text-gray-600 font-mono text-sm">STEAM WRAPPED 2025</p>
@@ -274,5 +293,13 @@
       stagger: 0.2,
     });
   });
+
+  const shouldAutoCopy = {{ 'true' if auto_copy else 'false' }};
+  if (shouldAutoCopy && window.copyLinkHelpers) {
+    const autoButton = document.getElementById('copy-share-link');
+    if (autoButton) {
+      window.copyLinkHelpers.copyFromButton(autoButton);
+    }
+  }
 </script>
 {% endblock %}
