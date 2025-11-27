@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% block main_padding %}pt-0{% endblock %}
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-void">
+  <!-- Progress Bar -->
+  <div class="fixed top-0 left-0 w-full h-1 bg-white/10 z-50">
+    <div id="progress-bar"
+      class="h-full bg-gradient-to-r from-neon-purple to-neon-blue w-0 transition-all duration-300"></div>
+  </div>
+
+  <!-- Scrollable Sections -->
+  <div class="snap-y snap-mandatory h-screen w-full overflow-y-auto scroll-smooth" id="wrapped-scroll">
+    <!-- Section 1: Intro -->
+    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden bg-void">
+
+      <div class="relative z-10 text-center space-y-8 px-4">
+        <div class="relative inline-block animate-float">
+          <img src="{{ user.avatarfull }}" alt="Profile"
+            class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-neon-purple shadow-[0_0_60px_rgba(139,92,246,0.6)]" />
+          <div
+            class="absolute -bottom-3 -right-3 bg-neon-green text-black font-bold px-4 py-2 rounded-full text-sm shadow-lg">
+            SHARED</div>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="font-mono text-neon-blue text-lg tracking-widest">STEAM WRAPPED 2025</h2>
+          <h1 class="text-4xl md:text-8xl font-display font-black leading-tight">
+            Check out<br />
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400"> {{
+              user.personaname }}'s </span><br />
+            Year
+          </h1>
+          <p class="text-xl text-gray-400 max-w-md mx-auto">A journey through their gaming year.</p>
+        </div>
+
+        <div class="animate-bounce mt-12">
+          <svg class="w-8 h-8 mx-auto text-gray-500" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Total Time Stats -->
+    <section class="snap-start min-h-screen flex items-center justify-center relative px-4 py-20 bg-void">
+      <div class="max-w-5xl w-full">
+        <div class="text-center mb-16">
+          <h3 class="font-mono text-gray-500 mb-4">THEY SPENT</h3>
+          <div class="text-6xl md:text-[12rem] font-display font-black leading-none">
+            <span class="bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600"> {{
+              stats.total_playtime_hours }} </span>
+            <span class="text-3xl md:text-5xl text-gray-600 font-normal">HOURS</span>
+          </div>
+          <p class="text-xl text-gray-400 mt-6">in digital worlds</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors">
+            <div class="text-2xl md:text-4xl font-bold text-neon-blue mb-1 md:mb-2">{{ sleep_destroyer.days_lost }}
+            </div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">DAYS OF SLEEP LOST</div>
+          </div>
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors hidden md:block">
+            <div class="text-2xl md:text-4xl font-bold text-neon-purple mb-1 md:mb-2">{{ sleep_destroyer.anime_episodes
+              }}</div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">ANIME EPISODES WORTH</div>
+          </div>
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors">
+            <div class="text-2xl md:text-4xl font-bold text-neon-green mb-1 md:mb-2">{{ stats.game_count }}</div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">GAMES IN LIBRARY</div>
+          </div>
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors">
+            <div class="text-2xl md:text-4xl font-bold text-yellow-400 mb-1 md:mb-2">{{ sleep_destroyer.games_played }}
+            </div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">GAMES PLAYED</div>
+          </div>
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors">
+            <div class="text-2xl md:text-4xl font-bold text-red-400 mb-1 md:mb-2">{{ sleep_destroyer.games_unplayed }}
+            </div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">GAMES UNPLAYED</div>
+          </div>
+          <div class="glass rounded-2xl p-3 md:p-6 text-center hover:bg-white/5 transition-colors hidden md:block">
+            <div class="text-2xl md:text-4xl font-bold text-cyan-400 mb-1 md:mb-2">{{ sleep_destroyer.skill_level_gained
+              }}</div>
+            <div class="text-gray-400 text-[10px] md:text-sm font-mono leading-tight">SKILL LEVELS GAINED</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Top Game Reveal -->
+    {% if top_game %}
+    <section class="snap-start min-h-screen flex items-center justify-center relative overflow-hidden bg-void">
+      <!-- Background Image -->
+      <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ top_game.appid }}/library_hero.jpg" alt=""
+          class="absolute inset-0 w-full h-full object-cover object-center opacity-20 blur-sm" />
+        <div class="absolute inset-0 bg-gradient-to-t from-void via-void/80 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-5xl w-full px-4 text-center">
+        <h3 class="font-mono text-neon-green mb-8 tracking-widest">THEIR #1 GAME</h3>
+
+        <div class="relative inline-block mb-8">
+          <div class="absolute inset-0 bg-gradient-to-r from-neon-purple to-neon-blue blur-3xl opacity-50"></div>
+          <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ top_game.appid }}/header.jpg"
+            alt="{{ top_game.name }}" class="relative rounded-2xl shadow-2xl max-w-2xl w-full" />
+        </div>
+
+        <h1 class="text-3xl md:text-7xl font-display font-black mb-6">{{ top_game.name }}</h1>
+
+        <div class="flex justify-center gap-8 text-gray-400 font-mono">
+          <div>
+            <div class="text-2xl md:text-4xl font-bold text-white">{{ (top_game.playtime_forever / 60)|int }}</div>
+            <div class="text-sm">HOURS</div>
+          </div>
+          <div class="w-px bg-white/20"></div>
+          <div>
+            <div class="text-2xl md:text-4xl font-bold text-neon-purple">MOST</div>
+            <div class="text-sm">PLAYED</div>
+          </div>
+        </div>
+
+        <p class="text-xl text-gray-400 mt-8 max-w-xl mx-auto">This game defined their year.</p>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- Section 4: Top 5 Games -->
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 py-20 bg-void">
+      <div class="max-w-4xl w-full">
+        <h3 class="font-mono text-center text-gray-500 mb-4">THEIR TOP 5</h3>
+        <h2 class="text-3xl md:text-5xl font-display font-bold text-center mb-12">The Rotation</h2>
+
+        <div class="space-y-4">
+          {% for game in top_5_games %}
+          <div
+            class="glass rounded-2xl p-4 md:p-6 flex items-center gap-4 md:gap-6 group hover:bg-white/10 transition-all hover:scale-[1.02]">
+            <div
+              class="text-2xl md:text-6xl font-display font-black text-gray-700 group-hover:text-neon-blue transition-colors w-16 md:w-24 text-center">
+              {{ loop.index }}</div>
+            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ game.appid }}/capsule_184x69.jpg" alt=""
+              class="w-16 md:w-32 rounded-lg" />
+            <div class="flex-1 min-w-0">
+              <div class="text-base md:text-2xl font-bold truncate">{{ game.name }}</div>
+              <div class="text-gray-400 font-mono text-sm">{{ (game.playtime_forever / 60)|int }} hours</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Top Developer -->
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative bg-void">
+      <div class="absolute inset-0 bg-gradient-to-br from-neon-purple/10 to-transparent"></div>
+
+      <div class="relative z-10 text-center max-w-3xl">
+        <h3 class="font-mono text-neon-purple mb-4 tracking-widest">THEIR FAVORITE STUDIO</h3>
+        <h1 class="text-4xl md:text-8xl font-display font-black mb-8">{% if top_developers %} {{ top_developers[0].name
+          }} {% else %} Unknown {% endif %}</h1>
+        <p class="text-xl text-gray-400 mb-12">They trusted them with their time again and again.</p>
+
+        {% if top_developers|length > 1 %}
+        <div class="flex flex-wrap justify-center gap-4">
+          {% for dev in top_developers[1:4] %}
+          <div class="glass px-6 py-3 rounded-full">
+            <span class="text-gray-400">#{{ loop.index + 1 }}</span>
+            <span class="ml-2 font-medium">{{ dev.name }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Section 6: Top Genre -->
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative bg-void">
+      <div class="absolute inset-0 bg-gradient-to-bl from-neon-blue/10 to-transparent"></div>
+
+      <div class="relative z-10 text-center max-w-3xl">
+        <h3 class="font-mono text-neon-blue mb-4 tracking-widest">THEIR GENRE</h3>
+        <h1 class="text-4xl md:text-8xl font-display font-black mb-4">{{ top_genre }}</h1>
+        <div class="text-xl md:text-3xl text-gray-500 font-mono mb-8">{{ top_genre_hours }} hours</div>
+
+        <p class="text-xl text-gray-400 mb-12">This is where they feel at home.</p>
+
+        <!-- Genre breakdown mini chart -->
+        <div class="max-w-md mx-auto space-y-4">
+          {% for genre, data in genre_breakdown.items() %}
+          <div class="flex items-center gap-4">
+            <div class="w-24 text-right text-sm text-gray-500 truncate">{{ genre }}</div>
+            <div class="flex-1 h-3 bg-white/10 rounded-full overflow-hidden">
+              <div
+                class="h-full bg-gradient-to-r from-neon-blue to-neon-purple rounded-full transition-all duration-1000"
+                style="width: {{ data.percent }}%"></div>
+            </div>
+            <div class="w-12 text-sm font-mono">{{ data.hours }}h</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Call to Action -->
+    <section class="snap-start min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-void">
+      <div class="absolute inset-0 z-0">
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-r from-neon-purple/20 to-neon-blue/20 blur-[100px] rounded-full">
+        </div>
+      </div>
+
+      <div class="relative z-10 text-center space-y-8">
+        <h2 class="text-3xl md:text-7xl font-display font-black">
+          Want your own<br />
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-neon-purple to-neon-blue">Wrapped?</span>
+        </h2>
+
+        <p class="text-xl text-gray-400 max-w-lg mx-auto">See your own stats, top games, and more.</p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+          <a href="{{ url_for('views.index') }}"
+            class="px-10 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform text-lg">
+            Get My Wrapped </a>
+        </div>
+
+        <div class="pt-12">
+          <p class="text-gray-600 font-mono text-sm">STEAM WRAPPED 2025</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Progress bar
+  const scrollContainer = document.getElementById("wrapped-scroll");
+  const progressBar = document.getElementById("progress-bar");
+
+  scrollContainer.addEventListener("scroll", () => {
+    const scrollTop = scrollContainer.scrollTop;
+    const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    progressBar.style.width = progress + "%";
+  });
+
+  // GSAP Animations
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Animate sections on scroll
+  const sections = document.querySelectorAll("section");
+  sections.forEach((section, i) => {
+    gsap.from(section.children, {
+      scrollTrigger: {
+        trigger: section,
+        scroller: "#wrapped-scroll",
+        start: "top 80%",
+        toggleActions: "play none none reverse",
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+    });
+  });
+</script>
+{% endblock %}
