@@ -1,36 +1,141 @@
-{% extends "base.html" %} {% block content %}
-<div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-  <div class="relative z-10 text-center">
+{% extends "base.html" %}
+{% block main_padding %}pt-0{% endblock %}
+{% block content %}
+<div class="min-h-screen flex flex-col relative overflow-hidden">
 
-    <h1 class="font-display font-black text-4xl md:text-9xl tracking-tighter mb-6 leading-none">
-      YOUR YEAR<br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">IN STEAM</span>
-    </h1>
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[120px] animate-pulse-slow">
+      </div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-blue/20 rounded-full blur-[120px] animate-pulse-slow"
+        style="animation-delay: 2s;"></div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/2694490/7e7c3063207235c79f5e0974a24d65d08d985422.png')] opacity-5 bg-repeat">
+      </div>
+    </div>
 
-    <p class="font-mono text-gray-400 max-w-xl mx-auto mb-12 text-sm px-4 md:text-lg px-4 lg:text-xl px-2">Analyze your
-      gaming habits. Discover your playstyle. See where your time went in 2025.</p>
+    <div class="relative z-10 text-center max-w-5xl mx-auto space-y-8">
+      <div
+        class="inline-block mb-4 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-sm font-mono text-neon-green animate-float">
+        ✨ 2025 EDITION IS HERE
+      </div>
 
-    <a href="{{ url_for('auth.login') }}"
-      class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-neon-blue font-mono rounded-lg hover:bg-neon-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon-blue focus:ring-offset-gray-900">
-      <span
-        class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-900"></span>
-      <span class="relative items-center flex gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-brand-steam">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M16.5 5a4.5 4.5 0 1 1 -.653 8.953l-4.347 3.009l0 .038a3 3 0 0 1 -2.824 3l-.176 0a3 3 0 0 1 -2.94 -2.402l-2.56 -1.098v-3.5l3.51 1.755a2.989 2.989 0 0 1 2.834 -.635l2.727 -3.818a4.5 4.5 0 0 1 4.429 -5.302z" />
-          <circle cx="16.5" cy="9.5" r="1" fill="currentColor" />
-        </svg>
-        LOGIN WITH STEAM
-      </span>
-    </a>
-  </div>
+      <h1 class="font-display font-black text-6xl md:text-9xl tracking-tighter leading-none">
+        YOUR YEAR<br />
+        <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-white to-neon-purple bg-300% animate-gradient">IN
+          STEAM</span>
+      </h1>
 
-  <!-- Decorative elements -->
-  <div
-    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-blue/10 rounded-full blur-[100px] -z-10 animate-pulse-slow">
-  </div>
+      <p class="font-mono text-gray-400 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
+        Uncover your gaming habits, discover your playstyle, and share your 2025 story with the world.
+      </p>
+
+      <div class="pt-8 flex flex-col items-center gap-4">
+        <a href="{{ url_for('auth.login') }}"
+          class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-neon-blue font-mono rounded-xl hover:bg-neon-purple hover:scale-105 hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon-blue focus:ring-offset-gray-900">
+          <span class="relative flex items-center gap-3 text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M16.5 5a4.5 4.5 0 1 1 -.653 8.953l-4.347 3.009l0 .038a3 3 0 0 1 -2.824 3l-.176 0a3 3 0 0 1 -2.94 -2.402l-2.56 -1.098v-3.5l3.51 1.755a2.989 2.989 0 0 1 2.834 -.635l2.727 -3.818a4.5 4.5 0 0 1 4.429 -5.302z" />
+              <circle cx="16.5" cy="9.5" r="1" fill="currentColor" />
+            </svg>
+            CONNECT WITH STEAM
+          </span>
+        </a>
+        <p class="text-xs text-gray-600 font-mono">Safe & Secure • Read-only access</p>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-gray-500">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="relative py-32 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="glass p-8 rounded-3xl hover:bg-white/5 transition-colors group">
+          <div
+            class="w-12 h-12 bg-neon-blue/20 rounded-xl flex items-center justify-center mb-6 text-neon-blue group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-2xl mb-4">Time Analysis</h3>
+          <p class="text-gray-400 leading-relaxed">Deep dive into your playtime. See exactly how many days (or weeks)
+            you spent in your favorite worlds.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass p-8 rounded-3xl hover:bg-white/5 transition-colors group">
+          <div
+            class="w-12 h-12 bg-neon-purple/20 rounded-xl flex items-center justify-center mb-6 text-neon-purple group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+              </path>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-2xl mb-4">Gaming Persona</h3>
+          <p class="text-gray-400 leading-relaxed">Are you a Strategist or a Speed Demon? Our AI analyzes your library
+            to find your true gaming personality.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass p-8 rounded-3xl hover:bg-white/5 transition-colors group">
+          <div
+            class="w-12 h-12 bg-neon-green/20 rounded-xl flex items-center justify-center mb-6 text-neon-green group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
+              </path>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-2xl mb-4">Shareable Wrapped</h3>
+          <p class="text-gray-400 leading-relaxed">Generate a beautiful, shareable summary of your year. Compare stats
+            with friends and show off your achievements.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 text-center text-gray-600 font-mono text-sm">
+    <p>Not Affiliated with Valve Corporation</p>
+    <p class="mt-2">Made With 💜 By SpreadSheets</p>
+  </footer>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  gsap.from("h1", {
+    y: 100,
+    opacity: 0,
+    duration: 1.5,
+    ease: "power4.out",
+    delay: 0.2
+  });
+
+  gsap.from(".glass", {
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    stagger: 0.2,
+    scrollTrigger: {
+      trigger: ".grid",
+      start: "top 80%"
+    }
+  });
+</script>
 {% endblock %}
