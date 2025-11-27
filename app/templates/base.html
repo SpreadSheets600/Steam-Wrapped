@@ -31,6 +31,7 @@
               purple: "#8B5CF6",
               green: "#10B981",
             },
+            void: "#05060A",
           },
           animation: {
             float: "float 6s ease-in-out infinite",
@@ -102,17 +103,7 @@
 
   {% include 'components/navbar.html' %}
 
-  <main class="pt-18 min-h-screen">{% block content %}{% endblock %}</main>
-
-  <footer class="border-t border-white/5 mt-20 py-12">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="overflow-hidden whitespace-nowrap opacity-50 hover:opacity-100 transition-opacity duration-500">
-        <div
-          class="animate-marquee inline-block font-display text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white/20 to-white/5">
-          STEAM WRAPPED 2025</div>
-      </div>
-    </div>
-  </footer>
+  <main class="min-h-screen {% block main_padding %}pt-28{% endblock %}">{% block content %}{% endblock %}</main>
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
@@ -134,6 +125,87 @@
       duration: 1,
       ease: "power4.out",
     });
+
+    window.copyLinkHelpers = (() => {
+      const fallbackCopy = (text) => {
+        return new Promise((resolve, reject) => {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "absolute";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          textarea.setSelectionRange(0, textarea.value.length);
+          try {
+            const ok = document.execCommand("copy");
+            document.body.removeChild(textarea);
+            return ok ? resolve(true) : reject(new Error("copy failed"));
+          } catch (err) {
+            document.body.removeChild(textarea);
+            return reject(err);
+          }
+        });
+      };
+
+      const copyText = (text) => {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text).then(() => true).catch(() => fallbackCopy(text));
+        }
+        return fallbackCopy(text);
+      };
+
+      const showCopyFeedback = (button, success = true) => {
+        if (!button) return;
+        const originalLabel = button.dataset.copyOriginalLabel || button.textContent.trim();
+        button.dataset.copyOriginalLabel = originalLabel;
+        const feedbackId = button.getAttribute("data-copy-feedback");
+        const feedbackEl = feedbackId ? document.getElementById(feedbackId) : null;
+
+        if (feedbackEl) {
+          feedbackEl.textContent = success ? "Link copied!" : "Unable to copy link";
+          feedbackEl.classList.remove("hidden");
+          feedbackEl.classList.toggle("text-red-400", !success);
+        }
+
+        button.textContent = success ? "Copied!" : "Copy Failed";
+        button.disabled = true;
+
+        setTimeout(() => {
+          button.textContent = originalLabel;
+          button.disabled = false;
+          if (feedbackEl) {
+            feedbackEl.classList.add("hidden");
+          }
+        }, 2000);
+      };
+
+      const copyFromButton = (button) => {
+        if (!button) return;
+        const target = button.getAttribute("data-copy-target");
+        const input = target ? document.getElementById(target) : null;
+        if (!input) return;
+
+        copyText(input.value)
+          .then(() => showCopyFeedback(button, true))
+          .catch(() => showCopyFeedback(button, false));
+      };
+
+      const init = () => {
+        document.querySelectorAll("[data-copy-target]").forEach((button) => {
+          if (button.dataset.copyBound) return;
+          button.dataset.copyBound = "true";
+          button.addEventListener("click", (evt) => {
+            evt.preventDefault();
+            copyFromButton(button);
+          });
+        });
+      };
+
+      return { init, copyFromButton };
+    })();
+
+    window.copyLinkHelpers.init();
   </script>
   {% block scripts %}{% endblock %}
 </body>
