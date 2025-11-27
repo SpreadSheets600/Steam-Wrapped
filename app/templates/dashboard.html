@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex flex-col items-center justify-center bg-void relative overflow-hidden px-2">
+<div class="min-h-screen flex flex-col items-center justify-center bg-void relative overflow-hidden px-2 mt-18">
   <div class="max-w-7xl mx-auto space-y-8">
 
     <!-- Header with Profile Link -->
@@ -9,7 +9,8 @@
       <div class="flex items-center gap-4">
         <div class="relative">
           <img src="{{ user.avatarfull }}"
-            class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-neon-blue shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+            class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-neon-blue shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+            alt="">
           <div class="absolute -bottom-1 -right-1 bg-neon-green text-black font-bold px-2 py-0.5 rounded-full text-xs">
             Lvl {{ stats.level }}
           </div>
@@ -85,7 +86,7 @@
         class="bg-gradient-to-br from-yellow-900/20 to-void border border-yellow-500/30 rounded-3xl p-4 md:p-6 relative overflow-hidden">
         {% if achievement_stats and achievement_stats.rarest %}
         <div class="absolute -right-4 -bottom-4 w-24 h-24 opacity-30">
-          <img src="{{ achievement_stats.rarest.icon }}" class="w-full h-full grayscale">
+          <img src="{{ achievement_stats.rarest.icon }}" class="w-full h-full grayscale" alt="">
         </div>
         <h3 class="text-yellow-500 font-mono text-sm mb-3">🏆 RAREST ACHIEVEMENT</h3>
         <div class="font-bold text-base md:text-lg leading-tight mb-1">{{ achievement_stats.rarest.display_name }}</div>
@@ -221,7 +222,7 @@
           {% for badge in badges[:8] %}
           <div class="relative group cursor-pointer">
             <img src="{{ badge.image }}" class="w-full rounded-lg hover:scale-110 transition-transform"
-              title="{{ badge.name }}">
+              title="{{ badge.name }}" alt="">
             <div
               class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none z-10">
               {{ badge.name }}
