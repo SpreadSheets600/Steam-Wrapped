@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex flex-col items-center justify-center bg-void relative overflow-hidden px-2 mt-18">
+<div class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-2">
   <div class="max-w-7xl mx-auto space-y-8">
 
     <!-- Header with Profile Link -->
@@ -35,6 +35,38 @@
         </a>
       </div>
     </header>
+
+    <div class="w-full">
+      {% if share_url %}
+      <div
+        class="glass rounded-3xl px-4 py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center gap-4 border border-white/10">
+        <div class="flex-1">
+          <p class="text-xs font-mono text-gray-500">Your shareable Wrapped link</p>
+          <p class="text-base md:text-lg font-semibold">Show friends your 2025 stats</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <input id="dashboard-share-link" type="text" readonly value="{{ share_url }}"
+            class="flex-1 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-200" />
+          <button data-copy-target="dashboard-share-link" data-copy-feedback="dashboard-copy-feedback"
+            class="px-5 py-2 bg-neon-blue text-black font-bold rounded-xl hover:opacity-90 transition-opacity">
+            Copy Link
+          </button>
+        </div>
+      </div>
+      {% else %}
+      <div
+        class="glass rounded-3xl px-4 py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center gap-4 border border-dashed border-white/10">
+        <div class="flex-1">
+          <p class="text-xs font-mono text-gray-500">Need a link?</p>
+          <p class="text-base md:text-lg font-semibold">Generate your Wrapped link from the Wrapped page.</p>
+        </div>
+        <a href="{{ url_for('views.wrapped') }}"
+          class="px-5 py-2 bg-neon-purple text-white font-bold rounded-xl hover:opacity-90 transition-opacity text-center">
+          Create Link
+        </a>
+      </div>
+      {% endif %}
+    </div>
 
     <!-- Bento Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(180px,auto)]">
